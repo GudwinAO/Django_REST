@@ -1,9 +1,9 @@
 from dataclasses import fields
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer
 
 from .models import Author
 
-class AuthorModelSerializer(ModelSerializer):
+class AuthorModelSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Author
