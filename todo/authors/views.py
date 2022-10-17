@@ -53,7 +53,7 @@ class ArticleCustomDjangoFilterViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
     filterset_class = ArticleFilter
 
-Sclass ArticleLimitOffsetPagination(LimitOffsetPagination):
+class ArticleLimitOffsetPagination(LimitOffsetPagination):
     default_limit = 2
 class ArticleLimitOffsetPaginatonViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
