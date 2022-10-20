@@ -3,8 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 import AuthorList from './components/Author.js';
 import BookList from './components/Boos'
-import axios from 'axios'
-import {HashRouter, Route, Link, Switch} from 'react-router-dom'
+// import axios from 'axios'
+import AuthorBookList from './components/AuthorBook.js'
+import {HashRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
 
 
 const NotFound404 = ({ location }) => {
@@ -13,7 +14,8 @@ const NotFound404 = ({ location }) => {
       <h1>Страница по адресу '{location.pathname}' не найдена</h1>
     </div>
   )
-  }
+}
+
 class App extends React.Component {
   
   constructor(props) {
@@ -47,11 +49,15 @@ class App extends React.Component {
             </ul>
           </nav>
             <Switch>
-                <Route exact path='/' component={() => <AuthorList
-                items={this.state.authors} />} />
-                <Route exact path='/books' component={() => <BookList
-              items={this.state.books} />} />
-              <Route component={NotFound404} />
+                  <Route exact path='/' component={() => <AuthorList
+                  items={this.state.authors} />} />
+                  <Route exact path='/books' component={() => <BookList
+                  items={this.state.books} />} />
+                  <Route path="/author/:id">
+                  <AuthorBookList items={this.state.books} />
+                  </Route>
+                  <Redirect from='/authors' to='/' />
+                  <Route component={NotFound404} />
             </Switch>
           </HashRouter>
         </div>
