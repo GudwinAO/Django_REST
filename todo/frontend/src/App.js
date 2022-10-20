@@ -4,9 +4,16 @@ import './App.css';
 import AuthorList from './components/Author.js';
 import BookList from './components/Boos'
 import axios from 'axios'
+import {HashRouter, Route, Link, Switch} from 'react-router-dom'
 
 
-
+const NotFound404 = ({ location }) => {
+  return (
+    <div>
+      <h1>Страница по адресу '{location.pathname}' не найдена</h1>
+    </div>
+  )
+  }
 class App extends React.Component {
   
   constructor(props) {
@@ -39,16 +46,19 @@ class App extends React.Component {
               </li>
             </ul>
           </nav>
-              <Route exact path='/' component={() => <AuthorList
-              items={this.state.authors} />} />
-              <Route exact path='/books' component={() => <BookList
+            <Switch>
+                <Route exact path='/' component={() => <AuthorList
+                items={this.state.authors} />} />
+                <Route exact path='/books' component={() => <BookList
               items={this.state.books} />} />
+              <Route component={NotFound404} />
+            </Switch>
           </HashRouter>
         </div>
-        )
-      }
+      )
+    }
   }
-
+      
 //  class App extends React.Component {
 
 //   constructor(props) {
