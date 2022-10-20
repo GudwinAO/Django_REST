@@ -2,10 +2,10 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import AuthorList from './components/Author.js';
-import BookList from './components/Boos'
+import BookList from './components/Book.js'
 // import axios from 'axios'
 import AuthorBookList from './components/AuthorBook.js'
-import {BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
+import {BrowserRouter, Route, Link, Routes, Navigate} from 'react-router-dom'
 
 
 const NotFound404 = ({ location }) => {
@@ -48,17 +48,17 @@ class App extends React.Component {
               </li>
             </ul>
           </nav>
-            <Switch>
-                  <Route exact path='/' component={() => <AuthorList
-                  items={this.state.authors} />} />
-                  <Route exact path='/books' component={() => <BookList
-                  items={this.state.books} />} />
-                  <Route path="/author/:id">
-                  <AuthorBookList items={this.state.books} />
-                  </Route>
-                  <Redirect from='/authors' to='/' />
-                  <Route component={NotFound404} />
-            </Switch>
+            <Routes>
+                    <Route exact path='/' component={() => <AuthorList
+                              items={this.state.authors} />} />
+                    <Route exact path='/books' component={() => <BookList
+                              items={this.state.books} />} />
+                      <Route path="/author/:id">
+                        <AuthorBookList items={this.state.books} />
+                      </Route>
+                      <Navigate from='/authors' to='/' />
+                      <Route component={NotFound404} />
+            </Routes>
           </BrowserRouter>
         </div>
       )
