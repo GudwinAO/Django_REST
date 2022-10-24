@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'authors',
     'corsheaders',
+    #lesson_6_token
     'rest_framework.authtoken',
 ]
 
@@ -139,6 +140,7 @@ REST_FRAMEWORK = {
 'rest_framework.renderers.JSONRenderer',
 'rest_framework.renderers.BrowsableAPIRenderer',
 ],
+# Lesson_6_3_type_authentication
 'DEFAULT_AUTHENTICATION_CLASSES': [
 'rest_framework.authentication.BasicAuthentication',
 'rest_framework.authentication.SessionAuthentication',
