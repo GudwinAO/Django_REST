@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework import routers
+from rest_framework.authtoken import views
 from authors.views import AuthorModelViewSet, BookModelViewSet, BiographyModelViewSet, ArticleModelViewSet
 
 
-router = DefaultRouter()
+router = routers.DefaultRouter()
 router.register('authors', AuthorModelViewSet)
 router.register('books', BookModelViewSet)
 router.register('biography', BiographyModelViewSet)

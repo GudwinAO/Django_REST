@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import viewsets
+from .models import Author, Book
+from .serializers import AuthorSerializer, BookSerializer
 
 # Create your views here.
 from .serializers import AuthorSerializer, BookSerializer, BiographySerializer, ArticleSerializer
@@ -20,3 +23,7 @@ class BiographyModelViewSet(ModelViewSet):
 class ArticleModelViewSet(ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+
+class AuthorViewSet(viewsets.ModelViewSet):
+    serializer_class = AuthorSerializer
+    queryset = Author.objects.all()
