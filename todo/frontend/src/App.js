@@ -6,7 +6,7 @@ import BookList from './components/Book.js'
 // import axios from 'axios'
 import AuthorBookList from './components/AuthorBook.js'
 import {BrowserRouter, Route, Link, Routes, Navigate} from 'react-router-dom'
-
+import axios from 'axios'
 
 const NotFound404 = ({ location }) => {
   return (
@@ -33,8 +33,24 @@ class App extends React.Component {
       'books': books
       }
     }
+
+    load_data() {
+      axios.get('http://127.0.0.1:8000/api/authors/')
+        .then(response => {
+          this.setState({authors: response.data})
+        }).catch(error => console.log(error))
+
+      axios.get('http://127.0.0.1:8000/api/books/')
+        .then(response => {
+          this.setState({books: response.data})
+        }).catch(error => console.log(error))
+      }
+
+      componentDidMount() {
+        this.load_data()
+      }
       
-    render() {
+    /*render() {
       return (
         <div className="App">
           <BrowserRouter>
@@ -58,6 +74,36 @@ class App extends React.Component {
                       </Route>
                       <Navigate from='/authors' to='/' />
                       <Route component={NotFound404} />
+            </Routes>
+          </BrowserRouter>
+        </div>
+      )
+    }*/
+
+    render() {
+      return (
+        <div className="App">
+          <BrowserRouter>
+            <nav>
+            <ul>
+            <li>
+            <Link to='/'>Authors</Link>
+            </li>
+            <li>
+              <Link to='/books'>Books</Link>
+            </li>
+            </ul>
+            </nav>
+            <Routes>
+                <Route exact path='/' component={() => <AuthorList
+                  items={this.state.authors} />} />
+                <Route exact path='/books' component={() => <BookList
+                  items={this.state.books} />} />
+              <Route path="/author/:id">
+                <AuthorBookList items={this.state.books} />
+              </Route>
+              <Navigate from='/authors' to='/' />
+              <Route component={NotFound404} />
             </Routes>
           </BrowserRouter>
         </div>
@@ -95,5 +141,6 @@ class App extends React.Component {
 //     ) 
 //   }
 // } 
+
 
 export default App;
