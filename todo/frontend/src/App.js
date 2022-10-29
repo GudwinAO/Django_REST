@@ -8,6 +8,7 @@ import AuthorBookList from './components/AuthorBook.js'
 import {BrowserRouter, Route, Link, Routes, Navigate} from 'react-router-dom'
 import axios from 'axios'
 import LoginForm from './components/Auth.js'
+import Cookies from 'universal-cookie';
 
 const NotFound404 = ({ location }) => {
   return (
@@ -20,7 +21,7 @@ const NotFound404 = ({ location }) => {
 class App extends React.Component {
   
   constructor(props) {
-    super(props)
+    /*super(props)
     const author1 = {id: 1, name: 'Грин', birthday_year: 1880}
     const author2 = {id: 2, name: 'Пушкин', birthday_year: 1799}
     const authors = [author1, author2]
@@ -28,72 +29,94 @@ class App extends React.Component {
     const book2 = {id: 2, name: 'Золотая цепь', author: author1}
     const book3 = {id: 3, name: 'Пиковая дама', author: author2}
     const book4 = {id: 4, name: 'Руслан и Людмила', author: author2}
-    const books = [book1, book2, book3, book4]
+    const books = [book1, book2, book3, book4]*/
     this.state =  {
-      'authors': authors,
-      'books': books
+      'authors': [],
+      'books': [],
+      'token': ''
       }
     }
 
+    set_token(token) {
+      const cookies = new Cookies()
+      cookies.set('token', token)
+      this.setState({'token': token})
+    }
+
+    is_authenticated() {
+      return this.state.token != ''
+    }
+
+    logout() {
+      this.set_token('')
+    }
+
+    get_token_from_storage() {
+      const cookies = new Cookies()
+      const token = cookies.get('token')
+      this.setState({'token': token}, ()=>this.load_data())
+    }
+
+    get_token(username, password) {
+      axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username,
+      password: password})
+      .then(response => {
+        this.set_token(response.data['token'])
+      }).catch(error => alert('Неверный логин или пароль'))
+    }
+
+    get_headers() {
+      let headers = {
+      'Content-Type': 'application/json'
+      }
+      if (this.is_authenticated())
+      {
+      headers['Authorization'] = 'Token ' + this.state.token
+      }
+      return headers
+    }
+
     load_data() {
-      axios.get('http://127.0.0.1:8000/api/authors/')
+
+      const headers = this.get_headers()
+      axios.get('http://127.0.0.1:8000/api/authors/', {headers})
         .then(response => {
           this.setState({authors: response.data})
         }).catch(error => console.log(error))
 
-      axios.get('http://127.0.0.1:8000/api/books/')
+      axios.get('http://127.0.0.1:8000/api/books/', {headers})
         .then(response => {
           this.setState({books: response.data})
-        }).catch(error => console.log(error))
-      }
+        }).catch(error => {
+          console.log(error)
+          this.setState({books: []})
+        })
+    }
 
-      componentDidMount() {
-        this.load_data()
-      }
+
+    componentDidMount() {
+      this.get_token_from_storage()
+    }
+
       
-    /*render() {
-      return (
-        <div className="App">
-          <BrowserRouter>
-          <nav>
-            <ul>
-              <li>
-                <Link to='/'>Authors</Link>
-              </li>
-              <li>
-                <Link to='/books'>Books</Link>
-              </li>
-            </ul>
-          </nav>
-            <Routes>
-                    <Route exact path='/' component={() => <AuthorList
-                              items={this.state.authors} />} />
-                    <Route exact path='/books' component={() => <BookList
-                              items={this.state.books} />} />
-                      <Route path="/author/:id">
-                        <AuthorBookList items={this.state.books} />
-                      </Route>
-                      <Navigate from='/authors' to='/' />
-                      <Route component={NotFound404} />
-            </Routes>
-          </BrowserRouter>
-        </div>
-      )
-    }*/
-
+      
     render() {
       return (
         <div className="App">
           <BrowserRouter>
             <nav>
-            <ul>
-            <li>
-            <Link to='/'>Authors</Link>
-            </li>
-            <li>
-              <Link to='/books'>Books</Link>
-            </li>
-            </ul>
+              <ul>
+                <li>
+                  <Link to='/'>Authors</Link>
+                </li>
+                <li>
+                   <Link to='/books'>Books</Link>
+                </li>
+                <li>
+                  {this.is_authenticated() ? <button
+                  onClick={()=>this.logout()}>Logout</button> : <Link to='/login'>Login</Link>}
+                </li>
+              </ul>
             </nav>
             <Routes>
                 <Route exact path='/' component={() => <AuthorList
@@ -101,6 +124,8 @@ class App extends React.Component {
                 <Route exact path='/books' component={() => <BookList
                   items={this.state.books} />} />
                 <Route exact path='/login' component={() => <LoginForm />} />
+                <Route exact path='/login' component={() => <LoginForm
+                  get_token={(username, password) => this.get_token(username, password)} />} />
                 <Route path="/author/:id">
                   <AuthorBookList items={this.state.books} />
                 </Route>
@@ -111,38 +136,8 @@ class App extends React.Component {
         </div>
       )
     }
+ 
+
   }
       
-//  class App extends React.Component {
-
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//       'authors': []
-//     }
-
-//   }
-
-//   componentDidMount() {
-//       axios.get('http://127.0.0.1:8000/api/authors')
-//         .then(response => {
-//           const authors = response.data
-//             this.setState(
-//             {
-//               'authors': authors
-//             }
-//           )
-//         }).catch(error => console.log(error))
-//   }
-
-//   render () {
-//     return (
-//       <div>
-//         <AuthorList authors={this.state.authors} />
-//       </div>
-//     ) 
-//   }
-// } 
-
-
 export default App;
