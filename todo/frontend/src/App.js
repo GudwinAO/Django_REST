@@ -21,8 +21,8 @@ const NotFound404 = ({ location }) => {
 class App extends React.Component {
   
   constructor(props) {
-    /*super(props)
-    const author1 = {id: 1, name: 'Грин', birthday_year: 1880}
+    super(props)
+    /*const author1 = {id: 1, name: 'Грин', birthday_year: 1880}
     const author2 = {id: 2, name: 'Пушкин', birthday_year: 1799}
     const authors = [author1, author2]
     const book1 = {id: 1, name: 'Алые паруса', author: author1}
@@ -44,7 +44,7 @@ class App extends React.Component {
     }
 
     is_authenticated() {
-      return this.state.token != ''
+      return this.state.token !== ''
     }
 
     logout() {
