@@ -7,6 +7,7 @@ import BookList from './components/Book.js'
 import AuthorBookList from './components/AuthorBook.js'
 import {BrowserRouter, Route, Link, Routes, Navigate} from 'react-router-dom'
 import axios from 'axios'
+import LoginForm from './components/Auth.js'
 
 const NotFound404 = ({ location }) => {
   return (
@@ -99,9 +100,10 @@ class App extends React.Component {
                   items={this.state.authors} />} />
                 <Route exact path='/books' component={() => <BookList
                   items={this.state.books} />} />
-              <Route path="/author/:id">
-                <AuthorBookList items={this.state.books} />
-              </Route>
+                <Route exact path='/login' component={() => <LoginForm />} />
+                <Route path="/author/:id">
+                  <AuthorBookList items={this.state.books} />
+                </Route>
               <Navigate from='/authors' to='/' />
               <Route component={NotFound404} />
             </Routes>
