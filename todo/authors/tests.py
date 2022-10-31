@@ -34,3 +34,29 @@ class TestAuthorViewSet(TestCase):
         view = AuthorViewSet.as_view({'post': 'create'})
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    
+    def test_get_detail(self):
+        author = Author.objects.create(name='Пушкин', birthday_year=1799)
+        client = APIClient()
+        response = client.get(f'/api/authors/{author.id}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_edit_guest(self):
+        author = Author.objects.create(name='Пушкин', birthday_year=1799)
+        client = APIClient()
+        response = client.put(f'/api/authors/{author.id}/', {'name':'Грин',
+        'birthday_year': 1880})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_edit_admin(self):
+        author = Author.objects.create(name='Пушкин', birthday_year=1799)
+        client = APIClient()
+        admin = User.objects.create_superuser('admin', 'admin@admin.com',
+        'admin123456')
+        client.login(username='admin', password='admin123456')
+        response = client.put(f'/api/authors/{author.id}/', {'name':'Грин', 'birthday_year': 1880})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        author = Author.objects.get(id=author.id)
+        self.assertEqual(author.name, 'Грин')
+        self.assertEqual(author.birthday_year, 1880)
+        client.logout()
