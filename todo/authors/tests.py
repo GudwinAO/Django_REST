@@ -1,4 +1,5 @@
 import json
+import math
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, force_authenticate, APIClient, APISimpleTestCase, APITestCase
@@ -60,3 +61,8 @@ class TestAuthorViewSet(TestCase):
         self.assertEqual(author.name, 'Грин')
         self.assertEqual(author.birthday_year, 1880)
         client.logout()
+
+    class TestMath(APISimpleTestCase):
+ 
+        def test_sqrt(self):
+            self.assertEqual(math.sqrt(4), 2)
