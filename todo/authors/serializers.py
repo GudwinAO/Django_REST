@@ -21,7 +21,6 @@ class ArticleSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
-    authot = AuthorSerializer()
     class Meta:
         model = Book
         fields = '__all__'

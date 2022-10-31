@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets
 from .models import Author, Book
@@ -28,8 +27,3 @@ class ArticleModelViewSet(ModelViewSet):
 class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
-
-class BookViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = BookSerializer
-    queryset = Book.objects.all()
