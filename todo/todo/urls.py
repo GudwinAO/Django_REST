@@ -18,4 +18,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     #Lesson_6_token
     path('api-token-auth/', views.obtain_auth_token),
+    re_path(r'^api/(?P<version>\d\.\d)/users/$', UserListAPIView.as_view()),
 ]
