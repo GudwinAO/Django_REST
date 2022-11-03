@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import viewsets
 from .models import Author, Book
-from .serializers import AuthorSerializer, BookSerializer
+from .serializers import AuthorSerializer, BookSerializer, BookSerializerBase
 
 # Create your views here.
 from .serializers import AuthorSerializer, BookSerializer, BiographySerializer, ArticleSerializer
@@ -29,7 +29,16 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
 
-class BookViewSet(viewsets.ModelViewSet):
+"""class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BookSerializer
+    queryset = Book.objects.all()"""
+
+class BookViewSet(viewsets.ModelViewSet):
+# permission_classes = [permissions.IsAuthenticated]
+    serializer_class = BookSerializer
     queryset = Book.objects.all()
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return BookSerializer
+        return BookSerializerBase
