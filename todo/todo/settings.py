@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'authors',
     'corsheaders',
-    #lesson_6_token
     'rest_framework.authtoken',
+    'django.contrib.staticfiles', # required for serving swagger ui's css/js files
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -148,6 +149,6 @@ REST_FRAMEWORK = {
 ],
 #'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
 #'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-'DEFAULT_VERSIONING_CLASS':
-'rest_framework.versioning.QueryParameterVersioning',
+# 'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.QueryParameterVersioning',
+'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.AcceptHeaderVersioning',
 }
