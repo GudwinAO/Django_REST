@@ -7,8 +7,8 @@ class Author(models.Model):
     last_name = models.CharField(max_length=64)
     birthday_year = models.PositiveIntegerField()
 
-    def __str__(self):
-        return self.name
+    #def __str__(self):
+    #    return self.name
 
 class Biography(models.Model):
     text = models.TextField()
