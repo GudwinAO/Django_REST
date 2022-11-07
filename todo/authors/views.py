@@ -1,12 +1,9 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from rest_framework.viewsets import ModelViewSet
-from rest_framework import viewsets
-from .models import Author, Book
-from .serializers import AuthorSerializer, BookSerializer, BookSerializerBase
-
-# Create your views here.
-from .serializers import AuthorSerializer, BookSerializer, BiographySerializer, ArticleSerializer
+from rest_framework import generics
+from django.contrib.auth.models import User
+from .serializers import AuthorSerializer, AuthorSerializerBase, BookSerializer,BookSerializerBase, BiographySerializer, ArticleSerializer, UserSerializer, UserSerializerWithFullName
 from .models import Author, Book, Biography, Article
 
 class AuthorModelViewSet(ModelViewSet):
@@ -29,16 +26,40 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
 
+    def get_serializer_class(self):
+        if self.request.version == '2.0':
+            return AuthorSerializerBase
+        return AuthorSerializer
+
 """class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BookSerializer
     queryset = Book.objects.all()"""
 
+
+
 class BookViewSet(viewsets.ModelViewSet):
 # permission_classes = [permissions.IsAuthenticated]
     serializer_class = BookSerializer
     queryset = Book.objects.all()
+    """def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return BookSerializer
+        return BookSerializerBase"""
+
     def get_serializer_class(self):
         if self.request.method in ['GET']:
             return BookSerializer
         return BookSerializerBase
+
+
+class UserListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        if self.request.version == '0.2':
+            return UserSerializerWithFullName
+        return UserSerializer
+
+
