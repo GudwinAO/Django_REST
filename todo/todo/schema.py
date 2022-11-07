@@ -17,9 +17,15 @@ class AuthorType(DjangoObjectType):
 
 class Query(graphene.ObjectType):
     all_books = graphene.List(BookType)
+    all_authors = graphene.List(AuthorType)
 
     def resolve_all_books(root, info):
         return Book.objects.all()
+
+    def resolve_all_authors(root, info):
+        return Author.objects.all()
+
+
 
 
 
