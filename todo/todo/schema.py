@@ -35,10 +35,30 @@ class Query(graphene.ObjectType):
 
     def resolve_books_by_author_name(self, info, name=None):
         books = Book.objects.all()
-        
+
         if name:
             books = books.filter(author__name=name)
         return books
+
+class AuthorMutation(graphene.Mutation):
+    class Arguments:
+        birthday_year = graphene.Int(required=True)
+        id = graphene.ID()
+
+    author = graphene.Field(AuthorType)
+
+    @classmethod
+    def mutate(cls, root, info, birthday_year, id):
+        author = Author.objects.get(pk=id)
+        author.birthday_year = birthday_year
+        author.save()
+        return AuthorMutation(author=author)
+
+class Mutation(graphene.ObjectType):
+    update_author = AuthorMutation.Field()
+
+    
+schema = graphene.Schema(query=Query, mutation=Mutation)
 
 
 schema = graphene.Schema(query=Query)
