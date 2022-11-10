@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const BookItem = ({item, deleteBook}) => {
     return (
@@ -11,8 +12,11 @@ const BookItem = ({item, deleteBook}) => {
         </tr>
     )
 }
+
+
 const BookList = ({items, deleteBook}) => {
     return (
+        <div>
         <table>
             <tr>
                 <th>ID</th>
@@ -20,11 +24,13 @@ const BookList = ({items, deleteBook}) => {
                 <th>AUHTOR</th>
                 <th></th>
             </tr>
-            {items.map((item) => <BookItem item={item} deleteBook={deleteBook}
-            />)}
+            {items.map((item) => <BookItem item={item} deleteBook={deleteBook}/>)}
         </table>
+        <Link to='/books/create'>Create</Link>
+        </div>
     )
 }
+    
 
 
 export default BookList

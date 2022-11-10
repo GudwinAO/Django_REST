@@ -1,13 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
+/*import logo from './logo.svg';*/
 import './App.css';
 import AuthorList from './components/Author.js';
-import BookList from './components/Book.js'
-// import axios from 'axios'
-import AuthorBookList from './components/AuthorBook.js'
-import {BrowserRouter, Route, Link, Routes, Navigate} from 'react-router-dom'
-import axios from 'axios'
-import LoginForm from './components/Auth.js'
+import BookList from './components/Book.js';
+/*import axios from 'axios'*/
+import AuthorBookList from './components/AuthorBook.js';
+import BookForm from './components/BookForm';
+import {BrowserRouter, Route, Link, Routes, Navigate} from 'react-router-dom';
+import axios from 'axios';
+import LoginForm from './components/Auth.js';
 import Cookies from 'universal-cookie';
 
 
@@ -23,17 +24,17 @@ class App extends React.Component {
   
   constructor(props) {
     super(props)
-    /*const author1 = {id: 1, name: 'Грин', birthday_year: 1880}
+    const author1 = {id: 1, name: 'Грин', birthday_year: 1880}
     const author2 = {id: 2, name: 'Пушкин', birthday_year: 1799}
     const authors = [author1, author2]
     const book1 = {id: 1, name: 'Алые паруса', author: author1}
     const book2 = {id: 2, name: 'Золотая цепь', author: author1}
     const book3 = {id: 3, name: 'Пиковая дама', author: author2}
     const book4 = {id: 4, name: 'Руслан и Людмила', author: author2}
-    const books = [book1, book2, book3, book4]*/
+    const books = [book1, book2, book3, book4]
     this.state =  {
-      'authors': [],
-      'books': [],
+      'authors': authors,
+      'books': books,
       'token': ''
       }
     }
@@ -72,13 +73,12 @@ class App extends React.Component {
     }
     if (this.is_authenticated())
     {
-    headers['Authorization'] = 'Token ' + this.state.token
+      headers['Authorization'] = 'Token ' + this.state.token
     }
     return headers
   }
 
   load_data() {
-
     const headers = this.get_headers()
     axios.get('http://127.0.0.1:8000/api/authors/', {headers})
       .then(response => {
@@ -118,18 +118,16 @@ class App extends React.Component {
             </ul>
           </nav>
           <Routes>
-              <Route exact path='/' component={() => <AuthorList
-                items={this.state.authors} />} />
-              <Route exact path='/books' component={() => <BookList
-                items={this.state.books} />} />
-              <Route exact path='/login' component={() => <LoginForm />} />
-              <Route exact path='/login' component={() => <LoginForm
-                get_token={(username, password) => this.get_token(username, password)} />} />
-              <Route exact path='/books' component={() => <BookList
-                items={this.state.books} deleteBook={(id)=>this.deleteBook(id)} />} />
-              <Route path="/author/:id">
-                <AuthorBookList items={this.state.books} />
-              </Route>
+            <Route exact path='/' component={() => <AuthorList items={this.state.authors} />} />
+            <Route exact path='/books' component={() => <BookList items={this.state.books} />} />
+            <Route exact path='/login' component={() => <LoginForm />} />
+            <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
+            <Route exact path='/books' component={() => <BookList items={this.state.books} deleteBook={(id)=>this.deleteBook(id)} />} />
+            <Route exact path='/books/create' component={() => <BookForm />}/>
+            <Route exact path='/books' component={() => <BookList items={this.state.books} deleteBook={(id)=>this.deleteBook(id)} />} />
+            <Route path="/author/:id"> 
+              <AuthorBookList items={this.state.books} />
+            </Route>
             <Navigate from='/authors' to='/' />
             <Route component={NotFound404} />
           </Routes>
@@ -147,11 +145,7 @@ class App extends React.Component {
           }).catch(error => console.log(error))
   }
       
-    
-
-    
  
-
 }
       
 export default App;
