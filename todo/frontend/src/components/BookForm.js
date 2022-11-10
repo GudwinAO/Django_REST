@@ -37,14 +37,12 @@ class BookForm extends React.Component {
                     </select>
 
                 </div>
-                
+
                 <input type="submit" className="btn btn-primary" value="Save" />
             </form>
         );
     }
 }
    
-
-
 
 export default BookForm
