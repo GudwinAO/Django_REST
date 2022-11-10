@@ -10,6 +10,7 @@ import axios from 'axios'
 import LoginForm from './components/Auth.js'
 import Cookies from 'universal-cookie';
 
+
 const NotFound404 = ({ location }) => {
   return (
     <div>
@@ -37,107 +38,120 @@ class App extends React.Component {
       }
     }
 
-    set_token(token) {
-      const cookies = new Cookies()
-      cookies.set('token', token)
-      this.setState({'token': token})
-    }
+  set_token(token) {
+    const cookies = new Cookies()
+    cookies.set('token', token)
+    this.setState({'token': token})
+  }
 
-    is_authenticated() {
-      return this.state.token !== ''
-    }
+  is_authenticated() {
+    return this.state.token !== ''
+  }
 
-    logout() {
-      this.set_token('')
-    }
+  logout() {
+    this.set_token('')
+  }
 
-    get_token_from_storage() {
-      const cookies = new Cookies()
-      const token = cookies.get('token')
-      this.setState({'token': token}, ()=>this.load_data())
-    }
+  get_token_from_storage() {
+    const cookies = new Cookies()
+    const token = cookies.get('token')
+    this.setState({'token': token}, ()=>this.load_data())
+  }
 
-    get_token(username, password) {
-      axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username,
-      password: password})
+  get_token(username, password) {
+    axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username,
+    password: password})
+    .then(response => {
+      this.set_token(response.data['token'])
+    }).catch(error => alert('Неверный логин или пароль'))
+  }
+
+  get_headers() {
+    let headers = {
+    'Content-Type': 'application/json'
+    }
+    if (this.is_authenticated())
+    {
+    headers['Authorization'] = 'Token ' + this.state.token
+    }
+    return headers
+  }
+
+  load_data() {
+
+    const headers = this.get_headers()
+    axios.get('http://127.0.0.1:8000/api/authors/', {headers})
       .then(response => {
-        this.set_token(response.data['token'])
-      }).catch(error => alert('Неверный логин или пароль'))
+        this.setState({authors: response.data})
+      }).catch(error => console.log(error))
+
+    axios.get('http://127.0.0.1:8000/api/books/', {headers})
+      .then(response => {
+        this.setState({books: response.data})
+      }).catch(error => {
+        console.log(error)
+        this.setState({books: []})
+      })
     }
 
-    get_headers() {
-      let headers = {
-      'Content-Type': 'application/json'
-      }
-      if (this.is_authenticated())
-      {
-      headers['Authorization'] = 'Token ' + this.state.token
-      }
-      return headers
-    }
 
-    load_data() {
+  componentDidMount() {
+    this.get_token_from_storage()
+  }
 
-      const headers = this.get_headers()
-      axios.get('http://127.0.0.1:8000/api/authors/', {headers})
+  render() {
+    return (
+      <div className="App">
+        <BrowserRouter>
+          <nav>
+            <ul>
+              <li>
+                <Link to='/'>Authors</Link>
+              </li>
+              <li>
+                 <Link to='/books'>Books</Link>
+              </li>
+              <li>
+                {this.is_authenticated() ? <button
+                onClick={()=>this.logout()}>Logout</button> : <Link to='/login'>Login</Link>}
+              </li>
+            </ul>
+          </nav>
+          <Routes>
+              <Route exact path='/' component={() => <AuthorList
+                items={this.state.authors} />} />
+              <Route exact path='/books' component={() => <BookList
+                items={this.state.books} />} />
+              <Route exact path='/login' component={() => <LoginForm />} />
+              <Route exact path='/login' component={() => <LoginForm
+                get_token={(username, password) => this.get_token(username, password)} />} />
+              <Route exact path='/books' component={() => <BookList
+                items={this.state.books} deleteBook={(id)=>this.deleteBook(id)} />} />
+              <Route path="/author/:id">
+                <AuthorBookList items={this.state.books} />
+              </Route>
+            <Navigate from='/authors' to='/' />
+            <Route component={NotFound404} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    )
+  }
+  
+  deleteBook(id) {
+    const headers = this.get_headers()
+    axios.delete(`http://127.0.0.1:8000/api/books/${id}`, {headers, headers})
         .then(response => {
-          this.setState({authors: response.data})
-        }).catch(error => console.log(error))
-
-      axios.get('http://127.0.0.1:8000/api/books/', {headers})
-        .then(response => {
-          this.setState({books: response.data})
-        }).catch(error => {
-          console.log(error)
-          this.setState({books: []})
-        })
-    }
-
-
-    componentDidMount() {
-      this.get_token_from_storage()
-    }
-
+        this.setState({books: this.state.books.filter((item)=>item.id !==
+          id)})
+          }).catch(error => console.log(error))
+  }
       
-      
-    render() {
-      return (
-        <div className="App">
-          <BrowserRouter>
-            <nav>
-              <ul>
-                <li>
-                  <Link to='/'>Authors</Link>
-                </li>
-                <li>
-                   <Link to='/books'>Books</Link>
-                </li>
-                <li>
-                  {this.is_authenticated() ? <button
-                  onClick={()=>this.logout()}>Logout</button> : <Link to='/login'>Login</Link>}
-                </li>
-              </ul>
-            </nav>
-            <Routes>
-                <Route exact path='/' component={() => <AuthorList
-                  items={this.state.authors} />} />
-                <Route exact path='/books' component={() => <BookList
-                  items={this.state.books} />} />
-                <Route exact path='/login' component={() => <LoginForm />} />
-                <Route exact path='/login' component={() => <LoginForm
-                  get_token={(username, password) => this.get_token(username, password)} />} />
-                <Route path="/author/:id">
-                  <AuthorBookList items={this.state.books} />
-                </Route>
-              <Navigate from='/authors' to='/' />
-              <Route component={NotFound404} />
-            </Routes>
-          </BrowserRouter>
-        </div>
-      )
-    }
+    
+
+    
  
 
-  }
+}
       
 export default App;
