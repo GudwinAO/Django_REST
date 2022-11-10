@@ -1,29 +1,32 @@
 import React from 'react'
 
-const BookItem = ({item}) => {
+const BookItem = ({item, deleteBook}) => {
     return (
         <tr>
             <td>{item.id}</td>
             <td>{item.name}</td>
             <td>{item.author.name}</td>
-            <td><button type='button'>Delete</button></td>
+            <td><button onClick={()=>deleteBook(item.id)}
+            type='button'>Delete</button></td>
         </tr>
     )
 }
-
-
-const BookList = ({items}) => {
-return (
+const BookList = ({items, deleteBook}) => {
+    return (
         <table>
-                <tr>
+            <tr>
                 <th>ID</th>
                 <th>NAME</th>
                 <th>AUHTOR</th>
                 <th></th>
             </tr>
-            {items.map((item) => <BookItem item={item} />)}
+            {items.map((item) => <BookItem item={item} deleteBook={deleteBook}
+            />)}
         </table>
     )
 }
 
+
 export default BookList
+
+
