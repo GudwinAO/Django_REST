@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'authors',
     'corsheaders',
     'rest_framework.authtoken',
-    'django.contrib.staticfiles', # required for serving swagger ui's css/js files
     'drf_yasg',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -151,4 +151,9 @@ REST_FRAMEWORK = {
 #'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 # 'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.QueryParameterVersioning',
 'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.AcceptHeaderVersioning',
+'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.AllowAny',
+}
+
+GRAPHENE = {
+"SCHEMA": "todo.schema.schema",
 }
