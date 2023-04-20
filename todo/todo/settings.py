@@ -145,8 +145,9 @@ CORS_ALLOWED_ORIGINS = [
 "http://127.0.0.1:3000",
 "http://localhost:3000",
 "http://0.0.0.0:80",
-
 ]
+
+CORS_ALLOWED_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
 'DEFAULT_RENDERER_CLASSES': [
@@ -159,11 +160,11 @@ REST_FRAMEWORK = {
 'rest_framework.authentication.SessionAuthentication',
 'rest_framework.authentication.TokenAuthentication',
 ],
-#'DEFAULT_VERSIONING_CLASS': ('rest_framework.versioning.URLPathVersioning',),
-#'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-# 'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.QueryParameterVersioning',
-'DEFAULT_VERSIONING_CLASS': ('rest_framework.versioning.AcceptHeaderVersioning',),
-'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.QueryParameterVersioning',
+#'DEFAULT_VERSIONING_CLASS': ('rest_framework.versioning.AcceptHeaderVersioning',),
+#'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 }
 
 GRAPHENE = {

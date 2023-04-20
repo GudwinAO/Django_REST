@@ -23,7 +23,7 @@ services:
   nginx:
     build: ./nginx
     ports:
-      - 8000:80
+      - 8010:80
    
 
   frontend:
