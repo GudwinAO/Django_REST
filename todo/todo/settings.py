@@ -82,10 +82,19 @@ WSGI_APPLICATION = 'todo.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db',
+        'USER': 'django',
+        'PASSWORD': '1',
+        'HOST': 'db',
+        'PORT': '5432',
+}
 }
 
 
@@ -133,8 +142,12 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
+"http://127.0.0.1:3000",
 "http://localhost:3000",
+"http://0.0.0.0:80",
 ]
+
+CORS_ALLOWED_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
 'DEFAULT_RENDERER_CLASSES': [
@@ -147,11 +160,11 @@ REST_FRAMEWORK = {
 'rest_framework.authentication.SessionAuthentication',
 'rest_framework.authentication.TokenAuthentication',
 ],
-#'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
-#'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-# 'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.QueryParameterVersioning',
-'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.AcceptHeaderVersioning',
-'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.AllowAny',
+'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.QueryParameterVersioning',
+#'DEFAULT_VERSIONING_CLASS': ('rest_framework.versioning.AcceptHeaderVersioning',),
+#'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
 }
 
 GRAPHENE = {
